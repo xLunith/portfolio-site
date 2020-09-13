@@ -1,65 +1,123 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import React from 'react'
+import { homedir } from 'os';
+//李維安
+const inputNameArr = ["Clickabl", "Clickab", "Clicka", "Click", "Clic", "Cli", "Cl", "C", "\n", "autoAndrei", "\n", "l", "li", "李", "李w", "李we", "李wei", "李維", "李維a", "李維an", "李維安", 
+"李維安", "李維", "李", "\n", "autoA Programmer", "\n", "/", "/c", "/cl", "/cle", "/clea", "/clear", "/clear", "/clear"];
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+const nameAnimArr = [];
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+function wordAutomation(){
+  inputNameArr.forEach((ele, ind) => {
+    if(ele.substring(0, 4) == "auto"){
+      var originalEle = ele.slice(4);
+      var newEle;
+      var count = 0;
+      for(var i = 0; i<originalEle.length; i++){
+        newEle = originalEle.slice(0, i+1);
+        nameAnimArr.push(newEle);
+      }
+      for(var i = originalEle.length; i>=0; i--){
+        newEle = originalEle.slice(0, i);
+        nameAnimArr.push(newEle);
+      }
+    }
+    else{
+      nameAnimArr.push(ele);
+    }
+  });
+  console.log(nameAnimArr);
 }
+
+
+class Home extends React.Component {
+  constructor(props){
+    super(props);
+    this.name_ref = React.createRef();
+    this.welcome_ref = React.createRef();
+
+    this.nameAnim = () => {
+      var speed = 125;
+      var name = this.name_ref.current;
+      var welcome = this.welcome_ref.current;
+      nameAnimArr.forEach((ele, ind) => {
+          
+        var timeoutHandle = setTimeout(function(){
+          name.textContent = ele;
+          console.log(ele)
+        }, speed*ind);   
+        
+      });
+
+      setTimeout(function(){
+        name.textContent = "";
+        welcome.textContent = "";
+      }, speed*nameAnimArr.length);
+      
+      
+    }
+
+    this.nameAnim = this.nameAnim.bind(this);
+  }
+  render(){
+    wordAutomation();
+    return (
+      <div className="home-wrapper">
+        <div className="name-wrapper">
+          <div className="welcome-text montserrat" ref={this.welcome_ref}>Hi, I'm</div>
+          <div className="name-row">
+            <div onClick={this.nameAnim} className="welcome-name montserrat" ref={this.name_ref}>Clickable</div>
+            <div className="name-cursor montserrat blink">_</div>
+          </div>
+          
+        </div>
+        
+        <style jsx>{`
+        .home-wrapper{
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+  
+        }
+  
+        .name-wrapper{
+          width: 100%;
+          padding-bottom: 15vh;
+          display: grid;
+          justify-items: center;
+        }
+  
+        .name-row{
+          display: flex;
+          align-items: baseline;
+        }
+  
+        .welcome-text{
+          font-size: 10vh;
+          margin-bottom: 5vh;
+          
+        }
+  
+        .welcome-name{
+          text-align: center;
+          font-size: 10vh;
+        }
+  
+        .name-cursor{
+          font-size: 10vh;
+          padding-left: 10px;
+          
+        }
+  
+      
+      `}</style>
+      </div>
+    )
+  }
+  
+}
+
+export default Home;
