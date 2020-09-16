@@ -11,7 +11,7 @@ const nameAnimArr = [];
 
 const linkArr = [["A", "Ab", "Abo", "Abou", "About"], ["P", "Pr", "Pro", "Proj", "Proje", "Projec", "Project", "Projects"], ["C", "Co", "Con", "Cont", "Conta", "Contac", "Contact"]];
 
-function wordAutomation(){
+function wordAutomation(){ //If 'auto' is in the beginning of an element in inputNameArr, this function will automate typing and erasing
   inputNameArr.forEach((ele, ind) => {
     if(ele.substring(0, 4) == "auto"){
       var originalEle = ele.slice(4);
@@ -48,7 +48,8 @@ class Home extends React.Component {
     this.cursor4_ref = React.createRef();
 
     this.nameAnim = () => {
-      var speed = 125;
+      var speed = 125; // Speed of Animation typing
+      var timer = 0; //Used to time different timeouts
 
       //Setting Refs
       var name = this.name_ref.current;
@@ -66,22 +67,68 @@ class Home extends React.Component {
       name.style.pointerEvents = 'none';
       nameAnimArr.forEach((ele, ind) => {
           
-        var timeoutHandle = setTimeout(function(){
+        var timeoutHandle = setTimeout(function(){ //Sets name div to each element in nameAnimArr
           name.textContent = ele;
         }, speed*ind);   
-        
       });
+      timer += speed*nameAnimArr.length;
 
-      setTimeout(function(){
+      setTimeout(function(){ //Clears all visible elements on the page
         name.textContent = "";
         welcome.textContent = "";
         about.textContent = "";
         project.textContent = "";
         contact.textContent = "";
-        cursor1.style.display = 'none';
-      }, speed*nameAnimArr.length);
+        cursor1.style.visibility = 'hidden';
+
+        about.style.fontSize = '10vh';
+        project.style.fontSize = '10vh';
+        contact.style.fontSize = '10vh';
+      }, timer);
+      timer += 500;
+
+      setTimeout(function(){ //Makes cursor for About visible
+        cursor2.style.visibility = 'visible';
+      }, timer);
       
+      linkArr[0].forEach((ele, ind) => { //Types out About
+        setTimeout(function(){
+          about.textContent = ele;
+        }, (timer)+(speed*ind)); 
+      });
+
+      timer += speed*linkArr[0].length+500;
+
+      setTimeout(function(){
+        cursor2.style.visibility = 'hidden';
+        cursor3.style.visibility = 'visible';
+      }, timer);
+
+      linkArr[1].forEach((ele, ind) => { //Types out About
+        setTimeout(function(){
+          project.textContent = ele;
+        }, (timer)+(speed*ind)); 
+      });
       
+      timer += speed*linkArr[1].length+500;
+
+      setTimeout(function(){
+        cursor3.style.visibility = 'hidden';
+        cursor4.style.visibility = 'visible';
+      }, timer);
+
+      linkArr[2].forEach((ele, ind) => { //Types out About
+        setTimeout(function(){
+          contact.textContent = ele;
+        }, (timer)+(speed*ind)); 
+      });
+
+      timer += speed*linkArr[2].length+500;
+
+      setTimeout(function(){
+        cursor4.style.visibility = 'hidden';
+      }, timer);
+
     }
 
     this.nameAnim = this.nameAnim.bind(this);
@@ -109,7 +156,7 @@ class Home extends React.Component {
       </div>
       <style jsx>{`
         .navbar{
-          padding: 5vh;
+          padding: 0vh;
           display: flex;
           justify-content: space-evenly;
         }
@@ -132,6 +179,8 @@ class Home extends React.Component {
         .name-row{
           display: flex;
           align-items: baseline;
+          justify-content: center;
+          width: -moz-available;
         }
   
         .welcome-text{
@@ -151,7 +200,8 @@ class Home extends React.Component {
         }
 
         .nav-cursor{
-          display: none;
+          visibility: hidden;
+          font-size: 10vh;
         }
 
   
